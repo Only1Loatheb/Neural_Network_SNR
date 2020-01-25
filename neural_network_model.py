@@ -53,6 +53,9 @@ model.add(
   tf.keras.layers.MaxPooling2D(name='max2',
     pool_size=(POOL_SIZE, POOL_SIZE))
   )
+model.add(
+  tf.keras.layers.Flatten(name='flat1')
+  )
 
 model.add(tf.keras.layers.Dense(128, activation='relu'))
 model.add(tf.keras.layers.Dropout(0.2))

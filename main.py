@@ -12,4 +12,8 @@ model.fit_generator(
     steps_per_epoch=STEPS_PER_EPOCH,
     epochs=EPOCHS,
     validation_data=validation_generator,
-    validation_steps=VALIDATION_STEPS)
+    validation_steps=VALIDATION_STEPS,
+    use_multiprocessing=True)
+
+# model.save('my_model.h5')
+model.save_weights('my_model_weights.h5')
