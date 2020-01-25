@@ -3,32 +3,38 @@
 import warnings
 warnings.filterwarnings('ignore')
 import tensorflow as tf
+from tensorflow.keras import backend as K
 
 from pandas import read_csv
-from meta_data import TARGET_SIZE, BATCH_SIZE, RESCALE
+from meta_data import IMAGE_TARGET_SIZE, BATCH_SIZE, RESCALE, TRAIN_FILENAME, VALID_FILENAME, DATA_PATH, CSV_COLS
 
-train_df = read_csv("./train.csv")
-valid_df = read_csv("./valid.csv")
+train_df = read_csv(TRAIN_FILENAME)
+valid_df = read_csv(VALID_FILENAME)
 
-train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=RESCALE)
-test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(rescale=RESCALE)
+train_datagen = tf.keras.preprocessing.image.ImageDataGenerator(
+        rescale=RESCALE,
+        data_format=K.image_data_format())
+
+test_datagen = tf.keras.preprocessing.image.ImageDataGenerator(
+        rescale=RESCALE,
+        data_format=K.image_data_format())
 
 train_generator = train_datagen.flow_from_dataframe(
         dataframe=train_df,
-        directory='data/train',
+        directory=DATA_PATH + '/train',
         shuffle=True,
-        x_col="filename",
-        y_col="class",
-        target_size=TARGET_SIZE,
+        x_col=CSV_COLS[0],
+        y_col=CSV_COLS[1],
+        target_size=IMAGE_TARGET_SIZE,
         batch_size=BATCH_SIZE,
         class_mode='binary')
 
 validation_generator = test_datagen.flow_from_dataframe(
         dataframe=valid_df,
-        directory='data/validation',
-        x_col="filename",
-        y_col="class",
-        target_size=TARGET_SIZE,
+        directory=DATA_PATH + '/train',
+        x_col=CSV_COLS[0],
+        y_col=CSV_COLS[1],
+        target_size=IMAGE_TARGET_SIZE,
         batch_size=BATCH_SIZE,
         class_mode='binary')
 
