@@ -23,58 +23,58 @@ import matplotlib.pyplot as plt
 
 from scipy.ndimage import gaussian_filter
 from skimage import data
-from skimage import img_as_float
+from skimage import img_as_float,img_as_int
+from skimage.util import img_as_uint
 from skimage.morphology import reconstruction
 
 from skimage import io
-moon = io.imread("./data/train/Frame_00002.bmp")
-# Convert to float: Important for subtraction later which won't work with uint8
-image = img_as_float(moon)
-image = gaussian_filter(image, 1)
-
-seed = np.copy(image)
-seed[1:-1, 1:-1] = image.min()
-mask = image
-
-
-
-dilated = reconstruction(seed, mask, method='dilation')
 
 from skimage.color import rgb2gray
-dilated = rgb2gray(dilated)
+from skimage.morphology import remove_small_holes
 
-markers = np.zeros_like(dilated)
-markers[dilated < 0.1] = 1
-
-
+from skimage.util  import invert
+from skimage.morphology import convex_hull_image
 from skimage.color  import gray2rgb
-dilated = gray2rgb(markers)
+from skimage.external.tifffile import imsave
+from PIL import Image
 
-# from skimage.viewer import ImageViewer
-# viewer = ImageViewer(markers)
-# viewer.show()
+def prepoocessing(path):
+    moon = io.imread(path)
+    # Convert to float: Important for subtraction later which won't work with uint8
+    image = img_as_float(moon)
+    image = gaussian_filter(image, 1)
 
-######################################################################
-# Subtracting the dilated image leaves an image with just the coins and a
-# flat, black background, as shown below.
+    seed = np.copy(image)
+    seed[1:-1, 1:-1] = image.min()
+    mask = image
 
-fig, (ax0, ax1, ax2) = plt.subplots(nrows=1,
-                                    ncols=3,
-                                    figsize=(8, 2.5),
-                                    sharex=True,
-                                    sharey=True)
+    dilated = reconstruction(seed, mask, method='dilation')
 
-ax0.imshow(image, cmap='gray')
-ax0.set_title('original image')
-ax0.axis('off')
+    dilated = rgb2gray(dilated)
 
-ax1.imshow(dilated, vmin=image.min(), vmax=image.max(), cmap='gray')
-ax1.set_title('dilated')
-ax1.axis('off')
 
-ax2.imshow(image - dilated, cmap='gray')
-ax2.set_title('image - dilated')
-ax2.axis('off')
+    markers = np.zeros_like(dilated,dtype=bool)
+    markers[dilated < 0.1] = True
 
-fig.tight_layout()
-plt.show()
+    remove_small_holes(markers, area_threshold=128, connectivity=1, in_place=True)
+
+
+    # markers = invert(markers)
+    # pading = 8
+    # markers = np.pad(markers, ((pading,pading), (pading,pading)), mode='constant')
+    # markers = convex_hull_image(markers)
+    # markers = invert(markers)
+    # markers = markers[pading:-pading,pading:-pading]
+
+    dilated = gray2rgb(img_as_float(markers))
+    img = np.maximum(image , dilated)
+
+    return img
+
+import glob
+paths = list(glob.glob("./data/train/*.bmp"))
+
+for i,path in enumerate(paths[:1]):
+    img = prepoocessing(path)
+    
+    # imsave(f'./data/moded/{i}.tif',img_as_float(img))
