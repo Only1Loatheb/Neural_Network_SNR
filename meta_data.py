@@ -1,6 +1,7 @@
 import numpy as np
 
 DATA_PATH = "data"
+TRAIN_PATH = "/moded" #"/train"
 
 TRAIN_FILENAME = "./train.csv"
 VALID_FILENAME = "./valid.csv"

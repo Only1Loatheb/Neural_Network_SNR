@@ -37,6 +37,9 @@ from skimage.morphology import convex_hull_image
 from skimage.color  import gray2rgb
 from skimage.external.tifffile import imsave
 from PIL import Image
+from skimage.viewer import ImageViewer
+import os
+
 
 def prepoocessing(path):
     moon = io.imread(path)
@@ -59,7 +62,7 @@ def prepoocessing(path):
     remove_small_holes(markers, area_threshold=128, connectivity=1, in_place=True)
 
 
-    # markers = invert(markers)
+    markers = invert(markers)
     # pading = 8
     # markers = np.pad(markers, ((pading,pading), (pading,pading)), mode='constant')
     # markers = convex_hull_image(markers)
@@ -67,14 +70,18 @@ def prepoocessing(path):
     # markers = markers[pading:-pading,pading:-pading]
 
     dilated = gray2rgb(img_as_float(markers))
-    img = np.maximum(image , dilated)
+    img = np.minimum(image , dilated)
 
     return img
 
 import glob
-paths = list(glob.glob("./data/train/*.bmp"))
-
-for i,path in enumerate(paths[:1]):
+paths = list(glob.glob("./data/test/*.tif"))
+paths.sort()
+for i,path in enumerate(paths[:800]):
     img = prepoocessing(path)
-    
+    directory, filename = os.path.split(path)
+    filename= os.path.splitext(filename)[0]
+    print(filename)
+    viewer = ImageViewer(img)
+    viewer.save_to_file(f'./data/modedtest/{filename}.bmp')
     # imsave(f'./data/moded/{i}.tif',img_as_float(img))
