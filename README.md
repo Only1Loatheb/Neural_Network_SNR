@@ -6,6 +6,8 @@ tensorflow              1.12
 ## List files
 ls --width=1 --format="commas" >../../train.csv
 
+## Get statistics
+tensorboard  --logdir="./folder20200129-180952" --port 6006
 
 <!-- To activate this environment, use
 
@@ -14,3 +16,4 @@ ls --width=1 --format="commas" >../../train.csv
 To deactivate an active environment, use
 
     $ conda deactivate -->
+    
