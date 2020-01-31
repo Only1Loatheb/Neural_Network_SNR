@@ -1,12 +1,12 @@
 import numpy as np
 
 DATA_PATH = "data"
-TRAIN_PATH = "/train" #"/moded" #
-TEST_PATH = "/test"
+TRAIN_PATH = "/processed"
+TEST_PATH = "/processed_test"
 
 TRAIN_FILENAME = "./train.csv"
 VALID_FILENAME = "./valid.csv"
-TEST_FILENAME = "./test.csv"
+TEST_FILENAME = "./processed_test.csv"
 CSV_COLS = ("filename","class")
 
 IMG_HEIGHT = 294
