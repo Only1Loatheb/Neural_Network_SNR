@@ -31,38 +31,33 @@ model.add(
     kernel_initializer='glorot_uniform',
     )
   )
-
-model.add(
-  tf.keras.layers.MaxPooling2D(name='max1',
-    pool_size=(POOL_SIZE, POOL_SIZE),
-    strides=(POOL_SIZE, POOL_SIZE),
+for i in range(5):
+  model.add(
+    tf.keras.layers.MaxPooling2D(name=f'max_{i+2}',
+      pool_size=(POOL_SIZE, POOL_SIZE),
+      strides=(POOL_SIZE, POOL_SIZE),
+      )
     )
-  )
 
-model.add(
-  tf.keras.layers.Conv2D(
-    CONV_FILTERS, # liczba filtrów w warstwie 
-    (5,5), # kernel size - rozmiar filtru
-    name='conv2',
-    strides=(1, 1), # krok przesówania filtru
-    padding='valid', # no padding => crop
-    dilation_rate=(1, 1), # odstępy między próbkami w filtrze
-    activation='relu',
-    use_bias=True,
-    kernel_initializer='glorot_uniform',
-    bias_initializer='zeros')
-  )
+  model.add(
+    tf.keras.layers.Conv2D(
+      CONV_FILTERS, # liczba filtrów w warstwie 
+      (5,5), # kernel size - rozmiar filtru
+      name=f'conv_{i+2}',
+      strides=(1, 1), # krok przesówania filtru
+      padding='valid', # no padding => crop
+      dilation_rate=(1, 1), # odstępy między próbkami w filtrze
+      activation='relu',
+      use_bias=True,
+      kernel_initializer='glorot_uniform',
+      bias_initializer='zeros')
+    )
 
-model.add(
-  tf.keras.layers.MaxPooling2D(name='max2',
-    pool_size=(POOL_SIZE, POOL_SIZE),
-    strides=(POOL_SIZE, POOL_SIZE),)
-  )
 model.add(
   tf.keras.layers.Flatten(name='flat1')
   )
 
-model.add(tf.keras.layers.Dense(128, activation='relu'))
+model.add(tf.keras.layers.Dense(64, activation='relu'))
 model.add(tf.keras.layers.Dropout(0.2))
 model.add(tf.keras.layers.Dense(2, activation='softmax'))
 

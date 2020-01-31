@@ -13,6 +13,8 @@ from model import model
 
 from meta_parameters import EPOCHS, STEPS_PER_EPOCH, VALIDATION_STEPS, BATCH_SIZE
 
+model.summary()
+
 model.fit_generator(
     train_generator,
     steps_per_epoch=STEPS_PER_EPOCH,
@@ -33,7 +35,6 @@ print(model.evaluate_generator(
 )
 
 
-model.count_params()
 model.summary()
 #TODO numbe of parameters
 # https://stackoverflow.com/questions/35792278/how-to-find-number-of-parameters-of-a-keras-model

@@ -1,6 +1,7 @@
 test.py
 test_model.h5
 my_model.h5
+my_model_weights.h5
 data/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
